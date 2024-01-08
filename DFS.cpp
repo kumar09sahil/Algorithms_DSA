@@ -1,0 +1,66 @@
+/* C++ program to implement the “cycle detection” in the following digraph G = (V, E)
+using the “Depth First Search (DFS)” algorithm.*/
+#include <bits/stdc++.h>
+using namespace std;
+
+class Graph {
+  private:
+    bool checkCycle(int node, vector < int > adj[], int vis[], int dfsVis[]) {
+      vis[node] = 1;
+      dfsVis[node] = 1;
+      for (auto it: adj[node]) {
+        if (!vis[it]) {
+          if (checkCycle(it, adj, vis, dfsVis)) return true;
+        } else if (dfsVis[it]) {
+          return true;
+        }
+      }
+      dfsVis[node] = 0;
+      return false;
+    }
+  public:
+    bool isCyclic(int N, vector < int > adj[]) {
+      int vis[N], dfsVis[N];
+     
+      for(int i = 0; i < N; i++){
+        vis[i] = 0;
+        dfsVis[i] = 0;
+      }
+
+      for (int i = 0; i < N; i++) {
+        if (!vis[i]) {
+          if (checkCycle(i, adj, vis, dfsVis)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+};
+
+void addEdge(vector < int > adj[], int u, int v) {
+  adj[u].push_back(v);
+}
+
+int main() {
+
+  int V = 6;
+
+  vector < int > adj[V];
+  addEdge(adj, 0, 1);
+  addEdge(adj, 1, 2);
+  addEdge(adj, 1, 4);
+  addEdge(adj, 2, 4);
+  addEdge(adj, 3, 1);
+  addEdge(adj, 4, 3);
+  addEdge(adj, 4, 5);
+  
+
+  Graph obj;
+  if (obj.isCyclic(V, adj))
+    cout << "Cycle Detected" << "\n";
+  else
+    cout << "No Cycle Detected";
+
+  return 0;
+}
